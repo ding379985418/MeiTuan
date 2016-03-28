@@ -68,13 +68,13 @@
 - (void)searCityWithKeyWord:(NSString *)keyWord
 {
     [self.resultArray removeAllObjects];
-    [self.citiesArray enumerateObjectsUsingBlock:^(DXCityModel *cityModel, NSUInteger idx, BOOL * _Nonnull stop) {
-        
-        if ([cityModel.city_name localizedCaseInsensitiveContainsString:keyWord ]||[cityModel.short_name localizedCaseInsensitiveContainsString:keyWord]||[cityModel.city_pinyin localizedCaseInsensitiveContainsString:keyWord]||[cityModel.short_pinyin localizedCaseInsensitiveContainsString:keyWord]) {
-//            NSLog(@"%@",cityModel.city_name);
-            [self.resultArray addObject:cityModel];
-        }
-    }];
+
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(city_pinyin CONTAINS[cd] %@) OR (city_name CONTAINS[cd] %@) OR  (short_pinyin CONTAINS[cd] %@) OR (short_name CONTAINS[cd] %@)",keyWord,keyWord,keyWord,keyWord];
+   NSArray *newArray = [self.citiesArray filteredArrayUsingPredicate:predicate];
+    if (newArray.count > 0) {
+        [self.resultArray addObjectsFromArray:newArray];
+    }
+    
 }
 
 #pragma mark -点击事件
